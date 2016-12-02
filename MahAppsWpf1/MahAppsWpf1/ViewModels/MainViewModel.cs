@@ -19,6 +19,7 @@ namespace MahAppsWpf1.ViewModels
     using System.ComponentModel;
     using System.Linq.Expressions;
 
+    using NLog;
 
     /// <summary>
     /// The Main View Model - links the top level view to the code.
@@ -49,5 +50,16 @@ namespace MahAppsWpf1.ViewModels
         }
 
         #endregion // INotifyPropertyChanged Members
+
+        #region Private static
+
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
+
+        #endregion
+
+        public MainViewModel()
+        {
+            _logger.Trace("Creating Main View Model");
+        }
     }
 }
