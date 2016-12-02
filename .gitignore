@@ -45,3 +45,7 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+/MahAppsWpf1/MahAppsWpf1/obj/Debug
+/MahAppsWpf1/MahAppsWpf1/bin/Debug
+/MahAppsWpf1/.vs/MahAppsWpf1/v14
+/MahAppsWpf1/packages/MahApps.Metro.1.3.0/lib
