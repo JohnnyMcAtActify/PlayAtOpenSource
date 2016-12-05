@@ -17,26 +17,23 @@
 // 
 // --------------------------------------------------------------------------------------------------------------------
 
+// ReSharper disable ArrangeThisQualifier
 namespace MahAppsWpf1.ViewModels
 {
-    using System;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Linq;
-    using System.Text;
-    using System.ComponentModel;
-    using System.Linq.Expressions;
-
-    using MahAppsWpf1.Interfaces;
 
     using NLog;
 
-    using MahAppsWpf1.Models;
+    using Models;
+    using Interfaces;
+
+    using MessageBox = System.Windows.MessageBox;
+    using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
     /// <summary>
     /// The Main View Model - links the top level view to the code.
     /// </summary>
-    public class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel
     {
 
         /// <summary>
@@ -45,41 +42,18 @@ namespace MahAppsWpf1.ViewModels
         /// </summary>
         public MainViewModel()
         {
-            _logger.Trace("Creating Main View Model");
+            Logger.Trace("Creating Main View Model");
             mainModel = new MainModel();
+            IsLoading = false;
         }
-
-        #region INotifyPropertyChanged Members
-
-        void OnPropertyChanged<T>(Expression<Func<T>> sExpression)
-        {
-            if (sExpression == null) throw new ArgumentNullException("sExpression");
-
-            MemberExpression body = sExpression.Body as MemberExpression;
-            if (body == null)
-            {
-                throw new ArgumentException("Body must be a member expression");
-            }
-            OnPropertyChanged(body.Member.Name);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion // INotifyPropertyChanged Members
+        
 
         #region Private static
 
         /// <summary>
-        /// The _logger for the View Model.
+        /// The Logger for the View Model.
         /// </summary>
-        private static Logger _logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         #endregion
 
@@ -93,6 +67,60 @@ namespace MahAppsWpf1.ViewModels
         /// <summary>
         /// Gets the file readers.
         /// </summary>
-        public ObservableCollection<IFileTypeReader> FileReaders => this.mainModel.FileReaders;
+        public ObservableCollection<IFileTypeReader> FileReaders => mainModel.FileReaders;
+
+        public IFileTypeReader SelectedFileReader
+        {
+            get
+            {
+                return mainModel.SelectedFileReader;
+                    
+            }
+            set
+            {
+                mainModel.SelectedFileReader = value;
+            }
+        }
+
+        public ObservableCollection<IBookRead> BooksRead => mainModel.BooksRead;
+
+        public bool IsLoading { get; set; }
+
+        public void LoadFileType()
+        {
+            Logger.Trace("Called LoadFileType");
+
+            if (SelectedFileReader == null)
+            {
+                MessageBox.Show("No File type selected");
+                return;
+            }
+            Logger.Trace("SelectedFileReader = {0} \n previous Path = {1}, previous file {2}", 
+                SelectedFileReader.FileTypeName, 
+                SelectedFileReader.PreviousFilePath, 
+                SelectedFileReader.PreviousFileName);
+
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.FileName = SelectedFileReader.PreviousFileName;
+
+            fileDialog.Filter = SelectedFileReader.FileExtensions;
+            fileDialog.FilterIndex = 4;
+            fileDialog.RestoreDirectory = true;
+
+            if (fileDialog.ShowDialog() == true)
+            {
+
+                IsLoading = true;
+                string failMessage;
+                if (!mainModel.ReadFile(fileDialog.FileName, out failMessage))
+                {
+                    IsLoading = false;
+                    MessageBox.Show("Failed with message {0}", failMessage);
+                }
+                IsLoading = false;
+
+            }
+
+        }
     }
 }
