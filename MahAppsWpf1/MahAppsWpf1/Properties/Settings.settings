@@ -1,7 +1,18 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="uri:settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="MahAppsWpf1.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="BooksFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Temp\Books test</Value>
+    </Setting>
+    <Setting Name="BooksFileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">BooksReadToDate16.csv</Value>
+    </Setting>
+    <Setting Name="CountriesFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Temp\Books test</Value>
+    </Setting>
+    <Setting Name="CountriesFileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Countries2.csv</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>
